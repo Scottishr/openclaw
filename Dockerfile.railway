@@ -1,0 +1,10 @@
+FROM node:22-slim
+
+RUN npm install -g openclaw@latest
+
+WORKDIR /app
+
+COPY railway-start.sh .
+RUN chmod +x railway-start.sh
+
+CMD ["./railway-start.sh"]
