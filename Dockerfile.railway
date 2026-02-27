@@ -7,4 +7,6 @@ WORKDIR /app
 COPY railway-start.sh .
 RUN chmod +x railway-start.sh
 
+ENV NODE_OPTIONS="--max-old-space-size=400"
+
 CMD ["./railway-start.sh"]
