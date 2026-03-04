@@ -381,6 +381,7 @@
     "node-domexception": "npm:@nolyfill/domexception@^1.0.28",
     "node-edge-tts": "^1.2.10",
     "node-nmap": "^4.0.0",
+    "nodemailer": "^8.0.1",
     "opusscript": "^0.1.1",
     "osc-progress": "^0.3.0",
     "pdfjs-dist": "^5.5.207",
