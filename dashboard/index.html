@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAW's Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
+        .dashboard-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background-color: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .card h3 { margin-top: 0; color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 10px; }
+        li strong { color: #555; }
+        .agent-status li, .task-list li { margin-bottom: 8px; }
+        .github-stats li, .system-health li { margin-bottom: 8px; }
+        .research-item, .activity-item { margin-bottom: 12px; }
+        .research-item p, .activity-item p { font-size: 0.9em; color: #666; margin-top: 5px; }
+        .repo-activity span { font-weight: bold; color: #28a745; }
+        .error-text { color: #dc3545; font-weight: bold; }
+        .info-text { color: #17a2b8; font-weight: bold; }
+        .warning-text { color: #ffc107; font-weight: bold; }
+        .highlight { font-weight: bold; color: #007bff; }
+    </style>
+</head>
+<body>
+    <h1>CLAW's Command Center - Scott's Project Dashboard</h1>
+    <div class="dashboard-container">
+
+        <div class="card agent-status">
+            <h3><i class="fas fa-robot"></i> Agent Status</h3>
+            <ul>
+                <li>CLAW (Master): <span class="info-text">Active</span></li>
+                <li>`gh-expert`: <span class="info-text">Active</span></li>
+                <li>`research-master`: <span class="info-text">Active</span></li>
+                <li>`code-wizard`: <span class="info-text">Active</span></li>
+                <li>`sec-guardian`: <span class="info-text">Active</span></li>
+                <li>`memory-keeper`: <span class="info-text">Active</span></li>
+                <li>`vault-keeper`: <span class="info-text">Active</span></li>
+                <li>`dashboard-builder`: <span class="info-text">Active</span></li>
+            </ul>
+        </div>
+
+        <div class="card github-stats">
+            <h3><i class="fab fa-github"></i> GitHub Repo Stats (Scottishr/openclaw)</h3>
+            <ul>
+                <li>Last Commit: <span id="last-commit">Fetching...</span></li>
+                <li>Open PRs: <span id="open-prs">Fetching...</span></li>
+                <li>Open Issues: <span id="open-issues">Fetching...</span></li>
+                <li>CI Status: <span id="ci-status">Fetching...</span></li>
+            </ul>
+        </div>
+
+        <div class="card task-list">
+            <h3><i class="fas fa-tasks"></i> Open Tasks</h3>
+            <ul id="tasks-container">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li>... more tasks</li>
+            </ul>
+            <p id="no-tasks-message" style="display: none;">No pending tasks. Nice work!</p>
+        </div>
+
+        <div class="card system-health">
+            <h3><i class="fas fa-heartbeat"></i> System Health</h3>
+            <ul>
+                <li>CPU Usage: <span id="cpu-usage">Fetching...</span></li>
+                <li>Memory Usage: <span id="mem-usage">Fetching...</span></li>
+                <li>Disk Space: <span id="disk-space">Fetching...</span></li>
+                <li>Uptime: <span id="system-uptime">Fetching...</span></li>
+            </ul>
+        </div>
+
+        <div class="card research-feed">
+            <h3><i class="fas fa-search"></i> Recent Research</h3>
+            <div id="research-container">
+                <p>Loading research...</p>
+            </div>
+        </div>
+
+        <div class="card weather-info">
+            <h3><i class="fas fa-cloud-sun"></i> Weather in Nairobi</h3>
+            <div id="weather-container">
+                <p>Fetching weather...</p>
+            </div>
+        </div>
+
+        <div class="card activity-feed">
+            <h3><i class="fas fa-clipboard-list"></i> Live Activity Feed</h3>
+            <ul id="activity-feed-container">
+                <li><span class="info-text">Agent status loaded.</span></li>
+                <!-- Activity items will be added here -->
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Dummy Data / Placeholder Functions ---
+        // In a real implementation, these would fetch data from agent APIs or a backend.
+
+        function fetchGitHubStats() {
+            console.log("Fetching GitHub stats...");
+            // Simulate data for now
+            document.getElementById('last-commit').textContent = '2026-03-04 17:25 UTC';
+            document.getElementById('open-prs').textContent = '2';
+            document.getElementById('open-issues').textContent = '5';
+            document.getElementById('ci-status').textContent = '✅ Success @ commit abc123'; // Can be '❌ Failed' or '⏳ Running'
+        }
+
+        function fetchTasks() {
+            console.log("Fetching tasks...");
+            const tasksContainer = document.getElementById('tasks-container');
+            tasksContainer.innerHTML = ''; // Clear existing
+            const tasks = [
+                { id: 1, title: "Deploy dashboard-builder", priority: "high", due: "2026-03-04", status: "completed" },
+                { id: 2, title: "Refactor code-wizard agent", priority: "medium", due: "2026-03-07", status: "Open" },
+                { id: 3, title: "Research new AI API", priority: "low", due: "2026-03-10", status: "Open" }
+            ];
+            const openTasks = tasks.filter(t => t.status !== 'completed');
+
+            if (openTasks.length === 0) {
+                document.getElementById('no-tasks-message').style.display = 'block';
+            } else {
+                openTasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>[${task.priority}] ${task.title}</strong> (Due: ${task.due || 'N/A'})`;
+                    tasksContainer.appendChild(li);
+                });
+            }
+        }
+
+        function fetchSystemHealth() {
+            console.log("Fetching system health...");
+            // Simulated data
+            document.getElementById('cpu-usage').textContent = '35%';
+            document.getElementById('mem-usage').textContent = '62%';
+            document.getElementById('disk-space').textContent = '75% Used';
+            document.getElementById('system-uptime').textContent = '4 days';
+        }
+
+        function fetchResearch() {
+            console.log("Fetching research...");
+            const researchContainer = document.getElementById('research-container');
+            researchContainer.innerHTML = '';
+             const research = [
+                { query: "Top AI Coding Tools 2026", summary: "Copilot, Tabnine, Cody dominate: code generation & analysis.", source: "Brave Search", date: "2026-03-04" },
+                { query: "Node.js 24 Security", summary: "Focus on dependency security & app logic, not just runtime.", source: "Brave Search", date: "2026-03-04" }
+             ];
+            research.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'research-item';
+                div.innerHTML = `<p><strong>Query:</strong> ${item.query}</p><p><strong>Summary:</strong> ${item.summary}</p><p><em>Source: ${item.source} | Date: ${item.date}</em></p>`;
+                researchContainer.appendChild(div);
+            });
+        }
+
+        function fetchWeather() {
+            console.log("Fetching weather...");
+            // Simulated data - in a real app, this would call an API like wttr.in
+            document.getElementById('weather-container').innerHTML = '<p>Light rain, 22°C</p>';
+        }
+
+        function addActivityLog(message, type = 'info') {
+            const feedContainer = document.getElementById('activity-feed-container');
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="${type}-text">${message}</span>`;
+            feedContainer.prepend(li); // Add to top
+            // Limit log size
+            while (feedContainer.children.length > 10) {
+                feedContainer.removeChild(feedContainer.lastChild);
+            }
+        }
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            addActivityLog('Dashboard initialized. Loading data...', 'info');
+            fetchGitHubStats();
+            fetchTasks();
+            fetchSystemHealth();
+            fetchResearch();
+            fetchWeather();
+            addActivityLog('Initial data loaded. Real-time updates would refresh periodically.', 'info');
+
+            // --- Mock live updates (for demonstration) ---
+            // In a real app, this would use WebSockets or polling
+            setInterval(() => {
+                addActivityLog(`Random action simulation: Performing check at ${new Date().toLocaleTimeString()}`, 'info');
+                // Simulate a change to trigger an alert condition randomly
+                // e.g., if (Math.random() > 0.95) { addActivityLog("🚨 HIGH CPU DETECTED!", 'error'); }
+            }, 20000); // Update activity feed every 20 seconds
+        });
+    </script>
+</body>
+</html>
